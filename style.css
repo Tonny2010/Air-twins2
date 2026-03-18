@@ -1,0 +1,96 @@
+/* Reset básico porque navegadores adoram bagunçar tudo */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Corpo do jogo */
+body {
+  background-color: #70c5ce; /* céu padrão genérico */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+/* Área do jogo */
+.game-container {
+  position: relative;
+  width: 400px;
+  height: 600px;
+  overflow: hidden;
+  border: 3px solid #000;
+  background: linear-gradient(#70c5ce, #ffffff);
+}
+
+/* Passarinho */
+.bird {
+  position: absolute;
+  width: 50px;
+  height: 35px;
+  background-image: url("images/bird.png"); /* sua imagem */
+  background-size: cover;
+  background-repeat: no-repeat;
+  top: 250px;
+  left: 80px;
+  z-index: 10;
+}
+
+/* Canos (base) */
+.pipe {
+  position: absolute;
+  width: 60px;
+  background-image: url("images/pipe.png"); /* sua imagem */
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+/* Cano de cima */
+.pipe.top {
+  top: 0;
+  transform: rotate(180deg);
+}
+
+/* Cano de baixo */
+.pipe.bottom {
+  bottom: 0;
+}
+
+/* Animação dos canos vindo da direita */
+@keyframes movePipes {
+  from {
+    right: -60px;
+  }
+  to {
+    right: 100%;
+  }
+}
+
+/* Aplicação da animação */
+.pipe {
+  animation: movePipes 3s linear infinite;
+}
+
+/* Pontuação */
+.score {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 24px;
+  color: white;
+  text-shadow: 2px 2px 4px black;
+  z-index: 20;
+}
+
+/* Game Over */
+.game-over {
+  position: absolute;
+  width: 100%;
+  top: 40%;
+  text-align: center;
+  font-size: 32px;
+  color: red;
+  display: none;
+}
