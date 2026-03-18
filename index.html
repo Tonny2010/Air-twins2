@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Flappy Bird Clone</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="game-container" id="game">
+  <div class="bird" id="bird"></div>
+  <div class="score" id="score">0</div>
+  <div class="game-over" id="gameOver">GAME OVER</div>
+</div>
+
+<script>
+  const bird = document.getElementById("bird");
+  const game = document.getElementById("game");
+  const gameOverText = document.getElementById("gameOver");
+
+  let birdY = 250;
+  let velocity = 0;
+  let gravity = 0.5;
+  let isGameOver = false;
+
+  // Pulo com espaço
+  document.addEventListener("keydown", (e) => {
+    if (e.code === "Space") {
+      velocity = -8;
+    }
+  });
+
+  function update() {
+    if (isGameOver) return;
+
+    velocity += gravity;
+    birdY += velocity;
+
+    bird.style.top = birdY + "px";
+
+    // colisão com chão/teto
+    if (birdY <= 0 || birdY >= 565) {
+      endGame();
+    }
+
+    requestAnimationFrame(update);
+  }
+
+  update();
+
+  // Criar canos
+  function createPipe() {
+    if (isGameOver) return;
+
+    const gap = 150;
+    const pipeHeight = Math.floor(Math.random() * 300) + 50;
+
+    const pipeTop = document.createElement("div");
+    pipeTop.classList.add("pipe", "top");
+    pipeTop.style.height = pipeHeight + "px";
+    pipeTop.style.right = "-60px";
+
+    const pipeBottom = document.createElement("div");
+    pipeBottom.classList.add("pipe", "bottom");
+    pipeBottom.style.height = (600 - pipeHeight - gap) + "px";
+    pipeBottom.style.right = "-60px";
+
+    game.appendChild(pipeTop);
+    game.appendChild(pipeBottom);
+
+    let pipeX = -60;
+
+    function movePipe() {
+      if (isGameOver) return;
+
+      pipeX += 2;
+      pipeTop.style.right = pipeX + "px";
+      pipeBottom.style.right = pipeX + "px";
+
+      // colisão simples
+      const birdRect = bird.getBoundingClientRect();
+      const topRect = pipeTop.getBoundingClientRect();
+      const bottomRect = pipeBottom.getBoundingClientRect();
+
+      if (
+        birdRect.left < topRect.right &&
+        birdRect.right > topRect.left &&
+        (birdRect.top < topRect.bottom ||
+         birdRect.bottom > bottomRect.top)
+      ) {
+        endGame();
+      }
+
+      if (pipeX < window.innerWidth + 100) {
+        requestAnimationFrame(movePipe);
+      } else {
+        pipeTop.remove();
+        pipeBottom.remove();
+      }
+    }
+
+    movePipe();
+
+    setTimeout(createPipe, 2000);
+  }
+
+  createPipe();
+
+  function endGame() {
+    isGameOver = true;
+    gameOverText.style.display = "block";
+  }
+</script>
+
+</body>
+</html>
